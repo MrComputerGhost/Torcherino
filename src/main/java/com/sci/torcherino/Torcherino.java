@@ -66,10 +66,10 @@ public class Torcherino implements IUpdatableMod {
             cfg.load();
 
             Torcherino.animatedTextures = cfg.getBoolean("animatedTextures", "visual", true, "Should Torcherino use animated textures?");
-            Torcherino.compressedTorcherino = cfg.getBoolean("compressedTorcherino", "general", false, "Are compressed Torcherinos enabled?");
-            Torcherino.doubleCompressedTorcherino = cfg.getBoolean("doubleCompressedTorcherino", "general", false, "Are double compressed Torcherinos enabled? Automatically enables compressed Torcherinos.");
+            Torcherino.compressedTorcherino = cfg.getBoolean("compressedTorcherino", "general", false, "Are compressed Torcherinos enabled?\n(Warning: May cause major performance issues!)");
+            Torcherino.doubleCompressedTorcherino = cfg.getBoolean("doubleCompressedTorcherino", "general", false, "Are double compressed Torcherinos enabled? Automatically enables compressed Torcherinos.\n(Warning: May cause major performance issues!)");
             Torcherino.overPoweredRecipe = cfg.getBoolean("overPoweredRecipe", "general", true, "Is the recipe for Torcherino extremely OP?");
-            Torcherino.logPlacement = cfg.getBoolean("logPlacement", "general", false, "(For Server Owners) Is it logged when someone places a Torcherino?");
+            Torcherino.logPlacement = cfg.getBoolean("logPlacement", "general", false, "(For Server Owners) Is it logged to the console when someone places a Torcherino?\n(Note: All Torcherino placement will still be stored in /Torhcerino/worldname)");
             Torcherino.useRF = cfg.getBoolean("useRF", "general", false, "Do Torcherinos require Redstone Flux to run?");
 
             if (Torcherino.doubleCompressedTorcherino)
