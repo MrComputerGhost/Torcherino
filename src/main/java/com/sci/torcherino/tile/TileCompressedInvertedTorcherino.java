@@ -6,14 +6,12 @@ package com.sci.torcherino.tile;
  */
 public class TileCompressedInvertedTorcherino extends TileTorcherino {
 
-    public TileCompressedInvertedTorcherino()
-    {
+    public TileCompressedInvertedTorcherino() {
         super(true);
     }
 
     @Override
-    protected int speed(final int base)
-    {
+    protected int speed(final int base) {
         return base * 9;
     }
 

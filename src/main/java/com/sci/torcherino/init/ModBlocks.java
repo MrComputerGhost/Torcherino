@@ -10,8 +10,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 @GameRegistry.ObjectHolder("Torcherino")
-public final class ModBlocks
-{
+public final class ModBlocks {
+
     public static BlockTorcherino torcherino;
     public static BlockCompressedTorcherino compressedTorcherino;
     public static BlockDoubleCompressedTorcherino doubleCompressedTorcherino;
@@ -20,14 +20,12 @@ public final class ModBlocks
     public static BlockCompressedInvertedTorcherino compressedInverseTorcherino;
     public static BlockDoubleCompressedInvertedTorcherino doubleCompressedInverseTorcherino;
 
-    public static void init()
-    {
+    public static void init() {
         ModBlocks.torcherino = new BlockTorcherino();
 
         ModBlocks.inverseTorcherino = new BlockInvertedTorcherino();
 
-        if (Torcherino.compressedTorcherino)
-        {
+        if (Torcherino.compressedTorcherino) {
             ModBlocks.compressedTorcherino = new BlockCompressedTorcherino();
             GameRegistry.registerBlock(ModBlocks.compressedTorcherino, ModBlocks.compressedTorcherino.getUnlocalizedName());
             GameRegistry.registerTileEntity(TileCompressedTorcherino.class, "compressed_torcherino_tile");
@@ -36,8 +34,7 @@ public final class ModBlocks
             GameRegistry.registerBlock(ModBlocks.compressedInverseTorcherino, ModBlocks.compressedInverseTorcherino.getUnlocalizedName());
             GameRegistry.registerTileEntity(TileCompressedInvertedTorcherino.class, "compressed_inverse_torcherino_tile");
         }
-        if (Torcherino.doubleCompressedTorcherino && Torcherino.compressedTorcherino)
-        {
+        if (Torcherino.doubleCompressedTorcherino && Torcherino.compressedTorcherino) {
             ModBlocks.doubleCompressedTorcherino = new BlockDoubleCompressedTorcherino();
             GameRegistry.registerBlock(ModBlocks.doubleCompressedTorcherino, ModBlocks.doubleCompressedTorcherino.getUnlocalizedName());
             GameRegistry.registerTileEntity(TileDoubleCompressedTorcherino.class, "double_compressed_torcherino_tile");
@@ -54,7 +51,6 @@ public final class ModBlocks
         GameRegistry.registerTileEntity(TileInvertedTorcherino.class, "inverse_torcherino_tile");
     }
 
-    private ModBlocks()
-    {
+    private ModBlocks() {
     }
 }

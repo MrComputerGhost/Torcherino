@@ -4,8 +4,7 @@ package com.sci.torcherino.lib;
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-public final class Props
-{
+public final class Props {
     public static final String ID = "Torcherino";
     public static final String NAME = "Torcherino";
     public static final String VERSION = "@VERSION@";
@@ -14,5 +13,6 @@ public final class Props
 
     public static final String COFH_CORE = "CoFHCore";
 
-    private Props(){}
+    private Props() {
+    }
 }

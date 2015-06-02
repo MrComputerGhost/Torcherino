@@ -1,5 +1,6 @@
 package com.sci.torcherino;
 
+import com.sci.torcherino.commands.CommandTorcherino;
 import com.sci.torcherino.init.ModBlocks;
 import com.sci.torcherino.init.Recipes;
 import com.sci.torcherino.lib.Props;
@@ -8,10 +9,7 @@ import com.sci.torcherino.update.IUpdatableMod;
 import com.sci.torcherino.update.ModVersion;
 import com.sci.torcherino.update.UpdateChecker;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -26,8 +24,7 @@ import java.io.File;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 @Mod(modid = Props.ID, name = Props.NAME, version = Props.VERSION)
-public class Torcherino implements IUpdatableMod
-{
+public class Torcherino implements IUpdatableMod {
     private static Torcherino instance;
 
     public static boolean animatedTextures;
@@ -38,8 +35,7 @@ public class Torcherino implements IUpdatableMod
     public static boolean useRF;
 
     @Mod.InstanceFactory
-    public static Torcherino instance()
-    {
+    public static Torcherino instance() {
         if (Torcherino.instance == null)
             Torcherino.instance = new Torcherino();
         return Torcherino.instance;
@@ -50,13 +46,11 @@ public class Torcherino implements IUpdatableMod
     private String[] blacklistedBlocks;
     private String[] blacklistedTiles;
 
-    private Torcherino()
-    {
+    private Torcherino() {
     }
 
     @Mod.EventHandler
-    public void preInit(final FMLPreInitializationEvent evt)
-    {
+    public void preInit(final FMLPreInitializationEvent evt) {
 
         logger = evt.getModLog();
 
@@ -68,25 +62,22 @@ public class Torcherino implements IUpdatableMod
         UpdateChecker.register(this);
 
         final Configuration cfg = new Configuration(new File(folder, "Torcherino.cfg"));
-        try
-        {
+        try {
             cfg.load();
 
             Torcherino.animatedTextures = cfg.getBoolean("animatedTextures", "visual", true, "Should Torcherino use animated textures?");
             Torcherino.compressedTorcherino = cfg.getBoolean("compressedTorcherino", "general", false, "Are compressed Torcherinos enabled?");
-            Torcherino.doubleCompressedTorcherino = cfg.getBoolean("doubleCompressedTorcherin", "general", false, "Are double compressed Torcherinos enabled? Automatically enables compressed Torcherinos.");
+            Torcherino.doubleCompressedTorcherino = cfg.getBoolean("doubleCompressedTorcherino", "general", false, "Are double compressed Torcherinos enabled? Automatically enables compressed Torcherinos.");
             Torcherino.overPoweredRecipe = cfg.getBoolean("overPoweredRecipe", "general", true, "Is the recipe for Torcherino extremely OP?");
             Torcherino.logPlacement = cfg.getBoolean("logPlacement", "general", false, "(For Server Owners) Is it logged when someone places a Torcherino?");
             Torcherino.useRF = cfg.getBoolean("useRF", "general", false, "Do Torcherinos require Redstone Flux to run?");
 
-            if(Torcherino.doubleCompressedTorcherino)
+            if (Torcherino.doubleCompressedTorcherino)
                 Torcherino.compressedTorcherino = true;
 
             this.blacklistedBlocks = cfg.getStringList("blacklistedBlocks", "blacklist", new String[]{}, "modid:unlocalized");
             this.blacklistedTiles = cfg.getStringList("blacklistedTiles", "blacklist", new String[]{}, "Fully qualified class name");
-        }
-        finally
-        {
+        } finally {
             if (cfg.hasChanged())
                 cfg.save();
         }
@@ -96,20 +87,22 @@ public class Torcherino implements IUpdatableMod
     }
 
     @Mod.EventHandler
-    public void init(final FMLInitializationEvent evt)
-    {
+    public void serverStart(final FMLServerStartingEvent evt) {
+        evt.registerServerCommand(new CommandTorcherino());
+    }
+
+    @Mod.EventHandler
+    public void init(final FMLInitializationEvent evt) {
         TorcherinoRegistry.blacklistBlock(Blocks.air);
 
         TorcherinoRegistry.blacklistBlock(ModBlocks.torcherino);
 
-        if (ModBlocks.compressedTorcherino != null)
-        {
+        if (ModBlocks.compressedTorcherino != null) {
             TorcherinoRegistry.blacklistBlock(ModBlocks.compressedTorcherino);
             TorcherinoRegistry.blacklistBlock(ModBlocks.compressedInverseTorcherino);
         }
 
-        if (ModBlocks.doubleCompressedTorcherino != null)
-        {
+        if (ModBlocks.doubleCompressedTorcherino != null) {
             TorcherinoRegistry.blacklistBlock(ModBlocks.doubleCompressedTorcherino);
             TorcherinoRegistry.blacklistBlock(ModBlocks.doubleCompressedInverseTorcherino);
         }
@@ -130,8 +123,7 @@ public class Torcherino implements IUpdatableMod
     }
 
     @Mod.EventHandler
-    public void postInit(final FMLPostInitializationEvent evt)
-    {
+    public void postInit(final FMLPostInitializationEvent evt) {
         for (final String block : this.blacklistedBlocks)
             this.blacklistBlock(block);
 
@@ -139,20 +131,17 @@ public class Torcherino implements IUpdatableMod
             this.blacklistTile(tile);
     }
 
-    private void blacklistBlock(final String s)
-    {
+    private void blacklistBlock(final String s) {
         final String[] parts = s.split(":");
 
-        if (parts.length != 2)
-        {
+        if (parts.length != 2) {
             System.out.println("Received malformed message: " + s);
             return;
         }
 
         final Block block = GameRegistry.findBlock(parts[0], parts[1]);
 
-        if (block == null)
-        {
+        if (block == null) {
             System.out.println("Could not find block: " + s + ", ignoring");
             return;
         }
@@ -163,39 +152,30 @@ public class Torcherino implements IUpdatableMod
     }
 
     @SuppressWarnings("unchecked")
-    private void blacklistTile(final String s)
-    {
-        try
-        {
+    private void blacklistTile(final String s) {
+        try {
             final Class<?> clazz = this.getClass().getClassLoader().loadClass(s);
 
-            if (clazz == null)
-            {
+            if (clazz == null) {
                 System.out.println("Class null: " + s);
                 return;
             }
 
-            if (!TileEntity.class.isAssignableFrom(clazz))
-            {
+            if (!TileEntity.class.isAssignableFrom(clazz)) {
                 System.out.println("Class not a TileEntity: " + s);
                 return;
             }
 
             TorcherinoRegistry.blacklistTile((Class<? extends TileEntity>) clazz);
-        }
-        catch (final ClassNotFoundException e)
-        {
+        } catch (final ClassNotFoundException e) {
             System.out.println("Class not found: " + s + ", ignoring");
         }
     }
 
     @Mod.EventHandler
-    public void imcMessage(final FMLInterModComms.IMCEvent evt)
-    {
-        for (final FMLInterModComms.IMCMessage message : evt.getMessages())
-        {
-            if (!message.isStringMessage())
-            {
+    public void imcMessage(final FMLInterModComms.IMCEvent evt) {
+        for (final FMLInterModComms.IMCMessage message : evt.getMessages()) {
+            if (!message.isStringMessage()) {
                 System.out.println("Received non-string message! Ignoring");
                 continue;
             }
@@ -210,20 +190,17 @@ public class Torcherino implements IUpdatableMod
     }
 
     @Override
-    public String name()
-    {
+    public String name() {
         return Props.NAME;
     }
 
     @Override
-    public String updateURL()
-    {
+    public String updateURL() {
         return Props.UPDATE_URL;
     }
 
     @Override
-    public ModVersion version()
-    {
+    public ModVersion version() {
         return ModVersion.parse(Props.VERSION);
     }
 }
